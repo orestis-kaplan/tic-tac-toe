@@ -21,11 +21,14 @@ def main
   boolean = true
   while boolean
 
+    puts "Enter the value from 1 to #{board.size**2}"
     print "#{player1.name} your turn: "
     next_move = gets.strip.to_i
     player1.play(next_move)
     board.fill_table(player1.value, player1.symbol)
-
+    
+    puts table_guide(board.size)
+    puts "********************"
     puts board.graphic_table
     result = game.win?(board)
 
@@ -35,6 +38,8 @@ def main
       player2.play(next_move)
       board.fill_table(player2.value, player2.symbol)
 
+      puts table_guide(board.size)
+      puts "********************"
       puts board.graphic_table
       result = game.win?(board)
 
@@ -47,6 +52,17 @@ def main
       boolean = false
     end
   end
+end
+
+def table_guide dimension
+ table_str = ""
+ (1..dimension**2).each do |num|
+   table_str += "#{num}" + '|'
+   if(num % dimension).zero?
+     table_str += "\n" + '------' + "\n"
+   end
+ end
+ table_str
 end
 
 main
