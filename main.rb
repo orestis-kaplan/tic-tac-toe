@@ -13,12 +13,14 @@ def main
   player2 = Player.new(player_two_name, 'O')
   boolean = true
   while boolean
+    
     puts 'Player 1 PLays'
     next_move = gets.strip.split.map {|i| i.to_i}
     player1.play(next_move)
     board.fill_table(player1.value, player1.symbol)
     puts board.table
     result = game.win?(board)
+
     if result == false
       puts 'Player 2 PLays'
       next_move = gets.strip.split.map {|i| i.to_i}
