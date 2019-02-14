@@ -39,13 +39,14 @@ class Game
       end
 
       board_diagonal = check_second_diagonal board
-      p board_diagonal
       if board_diagonal.all?{ |inner| inner == ['X'] }
         return true
       elsif board_diagonal.all? { |inner| inner == ['O'] }
         return true
       end
     end
+
+    false
   end
 
   def check_columns board

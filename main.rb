@@ -2,38 +2,48 @@ $LOAD_PATH << '.'
 require('board')
 require('game')
 require('player')
+
 def main
   game = Game.new
-  board = Board.new(3)
-  puts 'Player 1 Name'
+
+  print "Please enter the dimension of the table: "
+  dimension = gets.strip.to_i
+  board = Board.new(dimension)
+
+  print 'Please insert the name of the player 1: '
   player_one_name = gets.chomp
-  puts 'Player 2 Name'
+  print 'Please insert the name of the player 2: '
+
   player_two_name = gets.chomp
   player1 = Player.new(player_one_name, 'X')
   player2 = Player.new(player_two_name, 'O')
+
   boolean = true
   while boolean
-    
-    puts 'Player 1 PLays'
-    next_move = gets.strip.split.map {|i| i.to_i}
+
+    print "#{player1.name} your turn: "
+    next_move = gets.strip.to_i
     player1.play(next_move)
     board.fill_table(player1.value, player1.symbol)
-    puts board.table
+
+    puts board.graphic_table
     result = game.win?(board)
 
     if result == false
-      puts 'Player 2 PLays'
-      next_move = gets.strip.split.map {|i| i.to_i}
+      print "#{player2.name} your turn: "
+      next_move = gets.strip.to_i
       player2.play(next_move)
       board.fill_table(player2.value, player2.symbol)
-      puts board.table
+
+      puts board.graphic_table
       result = game.win?(board)
+
       if result == true
-        puts 'Player 2 Wins'
+        puts "#{player2.name} you won!!"
         boolean = false
       end
     else
-      puts 'Player 1 Wins'
+      puts "#{player1.name} you won!!"
       boolean = false
     end
   end
