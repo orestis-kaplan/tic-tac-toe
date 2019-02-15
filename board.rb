@@ -6,9 +6,9 @@ class Board
   attr_accessor :size, :table
 
   def initialize(size)
-    @size = size
+    @size = size == 0 ? DIMENSION : size
     @table = Array.new(@size)
-    size.times { |pos| @table[pos] = Array.new(size) }
+    @size.times { |pos| @table[pos] = Array.new(@size) }
   end
 
   def graphic_table
@@ -36,6 +36,17 @@ class Board
     arr_pos = position_coverter position
     @table[arr_pos[0]][arr_pos[1]] = symbol
   end
+
+  def table_guide
+    table_str = ""
+    (1..@size**2).each do |num|
+      table_str += "#{num}" + '|'
+      if(num % @size).zero?
+        table_str += "\n" + '------' + "\n"
+      end
+    end
+    table_str
+   end
 
   private
 

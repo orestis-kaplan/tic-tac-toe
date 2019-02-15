@@ -49,6 +49,8 @@ class Game
     false
   end
 
+  private
+
   def check_columns board
     column_matrix = []
     for i in 0...board.table.length
