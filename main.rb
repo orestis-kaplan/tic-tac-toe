@@ -9,14 +9,14 @@ def main
 
     puts welcome_screen
 
-    print "Please enter the dimension of the table [default: 3x3]: "
+    print "Please enter the dimension of the table [default: 3 (3 means 3x3)]: "
     dimension = gets.strip.to_i
     board = Board.new(dimension)
 
-    player_name, player_sym = setup_player(1, Player::PLAYER1_SYMBOL)
+    player_name, player_sym = setup_player(1, Player::PLAYER1_NAME, Player::PLAYER1_SYMBOL)
     player1 = Player.new(player_name, player_sym)
     
-    player_name, player_sym = setup_player(2, Player::PLAYER2_SYMBOL)
+    player_name, player_sym = setup_player(2, Player::PLAYER2_NAME, Player::PLAYER2_SYMBOL)
     player2 = Player.new(player_name, player_sym)
 
     on_game = true
@@ -46,7 +46,7 @@ def main
     end
 
     print 'Do you want to play again? (y/n) [default: n]: '
-    play_again = gets.match(/y|n/)[0] == 'y' ? true : false
+    play_again = gets.chomp == 'y' ? true : false
     on_game = true if play_again
     system "clear" if play_again
     break unless play_again
@@ -59,9 +59,10 @@ def welcome_screen
   welcome = "*"*welcome.length + "\n" + welcome + "\n" + "*"*welcome.length
 end
 
-def setup_player(num_of_player, symbol)
+def setup_player(num_of_player, name, symbol)
   print "Please insert the name of the player #{num_of_player}: "
-  player_name = gets.chomp.capitalize!
+  player_name = gets.strip.capitalize
+  player_name = player_name == "" ? name : player_name
   print "Select your symbol[default: #{symbol}]: "
   player_sym = gets.strip.upcase
   player_sym = player_sym == "" ? symbol : player_sym
