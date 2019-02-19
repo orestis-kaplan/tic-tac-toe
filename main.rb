@@ -29,7 +29,7 @@ def main
 
       make_a_move(player1, board)
 
-      system "clear"
+      system("cls") || system("clear")
 
       print_table(board)
       game_status = game.status(board)
@@ -48,7 +48,7 @@ def main
     print 'Do you want to play again? (y/n) [default: n]: '
     play_again = gets.chomp == 'y' ? true : false
     on_game = true if play_again
-    system "clear" if play_again
+    system("cls") || system("clear") if play_again
     break unless play_again
   end
   puts "Thanks for play this game!"
