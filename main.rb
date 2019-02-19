@@ -4,75 +4,94 @@ require('game')
 require('player')
 
 def main
-  game = Game.new
+  loop do
+    game = Game.new
 
-  puts welcome_screen
+    puts welcome_screen
 
-  print "Please enter the dimension of the table: "
-  dimension = gets.strip.to_i
-  board = Board.new(dimension)
+    print "Please enter the dimension of the table [default: 3x3]: "
+    dimension = gets.strip.to_i
+    board = Board.new(dimension)
 
-  # Setting up information for first player
-  print 'Please insert the name of the player 1: '
-  player_name = gets.chomp.capitalize!
-  print 'Select your symbol[default: X]: '
-  player_sym = gets.strip.upcase
-  player_sym = player_sym == "" ? Player::PLAYER1_SYMBOL : player_sym
+    player_name, player_sym = setup_player(1, Player::PLAYER1_SYMBOL)
+    player1 = Player.new(player_name, player_sym)
+    
+    player_name, player_sym = setup_player(2, Player::PLAYER2_SYMBOL)
+    player2 = Player.new(player_name, player_sym)
 
-  player1 = Player.new(player_name, player_sym)
+    on_game = true
+    play_again = true
+
+    print_table(board)
+
   
-  # Setting up information for second player
-  print 'Please insert the name of the player 2: '
-  player_name = gets.chomp.capitalize!
-  print 'Select your symbol[default: O]: '
-  player_sym = gets.strip.upcase
-  player_sym = player_sym == "" ? Player::PLAYER2_SYMBOL : player_sym
+    while on_game
 
-  player2 = Player.new(player_name, player_sym)
-
-  boolean = true
-  while boolean
-
-    puts "Enter the value from 1 to #{board.size**2}"
-    print "#{player1.name} your turn: "
-    next_move = gets.strip.to_i # add validation for values greater than the table dimension
-    player1.play(next_move)
-    board.fill_table(player1.value, player1.symbol)
-
-    system "clear"
-
-    puts board.table_guide
-    puts "********************"
-    puts board.graphic_table
-    result = game.win?(board)
-
-    if result == false
-      print "#{player2.name} your turn: "
-      next_move = gets.strip.to_i # add validation for values greater than the table dimension
-      player2.play(next_move)
-      board.fill_table(player2.value, player2.symbol)
+      make_a_move(player1, board)
 
       system "clear"
 
-      puts board.table_guide
-      puts "********************"
-      puts board.graphic_table
-      result = game.win?(board)
+      print_table(board)
+      game_status = game.status(board)
 
-      if result == true
-        puts "#{player2.name} you won!!"
-        boolean = false
+      if game_status == Game::WIN
+        puts "#{player1.name} you won!!"
+        on_game = false
+      elsif game_status == Game::DRAW
+        puts "Sorry none of you won"
+        on_game = false
+      else
+        player1, player2 = player2, player1
       end
-    else
-      puts "#{player1.name} you won!!"
-      boolean = false
     end
+
+    print 'Do you want to play again? (y/n) [default: n]: '
+    play_again = gets.match(/y|n/)[0] == 'y' ? true : false
+    on_game = true if play_again
+    system "clear" if play_again
+    break unless play_again
   end
+  puts "Thanks for play this game!"
 end
 
 def welcome_screen
   welcome = "WELCOME TO THE TIC TAC TOE GAME!"
   welcome = "*"*welcome.length + "\n" + welcome + "\n" + "*"*welcome.length
+end
+
+def setup_player(num_of_player, symbol)
+  print "Please insert the name of the player #{num_of_player}: "
+  player_name = gets.chomp.capitalize!
+  print "Select your symbol[default: #{symbol}]: "
+  player_sym = gets.strip.upcase
+  player_sym = player_sym == "" ? symbol : player_sym
+
+  return player_name, player_sym
+end
+
+def make_a_move(player, board)
+  begin
+    puts "Enter the value from 1 to #{board.size**2}"
+    print "#{player.name} your turn: "
+    next_move = gets.match(/\d+/)[0].to_i
+    raise "Please enter a number in the range." unless (next_move).between?(1, board.size**2)
+    player.play(next_move)
+    raise "Please select an empty position." unless board.fill_table(player.value, player.symbol)
+  rescue NoMethodError
+    puts "Please enter only numeric values"
+    retry
+  rescue RuntimeError => e
+    puts "#{e}"
+    retry
+  end
+end
+
+def print_table(board)
+  puts "TABLE GUIDE"
+  puts board.table_guide
+  puts "*" * ((board.size * board.size).to_s.length * board.size + board.size)
+  puts "TABLE GAME"
+  puts board.graphic_table
 end
 
 main

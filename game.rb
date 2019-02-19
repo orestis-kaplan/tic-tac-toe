@@ -3,50 +3,54 @@ class Game
   
   attr_accessor :column, :main_diagonal, :second_diagonal, :column_matrix
 
+  WIN = 'win'
+  DRAW = 'draw'
+  ON_GAME = 'on_game'
+
   def initialize
     @columns = []
     @main_diagonal = []
     @second_diagonal = []
   end
 
-  def win?(board)
-    if board.size < 3
-      puts 'Board size must be greater or equal to 3'
-      false
-    else
-      for i in board.table
-        if i.all?{ |inner| inner == 'X' }
-          return true
-        elsif i.all? { |inner| inner == 'O' }
-          return true
-        end
+  def status(board)
+    
+    for i in board.table
+      if i.all?{ |inner| inner == 'X' }
+        return WIN
+      elsif i.all? { |inner| inner == 'O' }
+        return WIN
       end
-      
-      board_columns = check_columns board
-      for i in board_columns
-        if i.all?{ |inner| inner == 'X' }
-          return true
-        elsif i.all? { |inner| inner == 'O' }
-          return true
-        end
-      end
-
-      board_diagonal = check_main_diagonal board
-      if board_diagonal.all?{ |inner| inner == ['X'] }
-        return true
-      elsif board_diagonal.all? { |inner| inner == ['O'] }
-        return true
-      end
-
-      board_diagonal = check_second_diagonal board
-      if board_diagonal.all?{ |inner| inner == ['X'] }
-        return true
-      elsif board_diagonal.all? { |inner| inner == ['O'] }
-        return true
+    end
+    
+    board_columns = check_columns board
+    for i in board_columns
+      if i.all?{ |inner| inner == 'X' }
+        return WIN
+      elsif i.all? { |inner| inner == 'O' }
+        return WIN
       end
     end
 
-    false
+    board_diagonal = check_main_diagonal board
+    if board_diagonal.all?{ |inner| inner == ['X'] }
+      return WIN
+    elsif board_diagonal.all? { |inner| inner == ['O'] }
+      return WIN
+    end
+
+    board_diagonal = check_second_diagonal board
+    if board_diagonal.all?{ |inner| inner == ['X'] }
+      return WIN
+    elsif board_diagonal.all? { |inner| inner == ['O'] }
+      return WIN
+    end
+
+    if board.table.flatten.none?{ |inner| inner == nil }
+      return DRAW
+    end
+    
+    ON_GAME
   end
 
   private
