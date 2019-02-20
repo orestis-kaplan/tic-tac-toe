@@ -1,100 +1,31 @@
 # game class
 class Game
-  
-  attr_accessor :column, :main_diagonal, :second_diagonal, :column_matrix
 
-  WIN = 'win'
-  DRAW = 'draw'
-  ON_GAME = 'on_game'
+  attr_accessor :board
 
-  def initialize
-    @columns = []
-    @main_diagonal = []
-    @second_diagonal = []
+  def initialize(board_dimension, player1_name, player1_sym, player2_name, player2_sym)
+    @board = Board.new(board_dimension)
+    @player1 = Player.new(player1_name, player1_sym)
+    @player2 = Player.new(player2_name, player2_sym)
   end
 
-  def status(board)
+  def status
+
+    rows_status = @board.check_rows
+    return rows_status if rows_status == Board::WIN
+
+    columns_status = @board.check_columns
+    return columns_status if columns_status == Board::WIN
+
+    main_diagonal_status = @board.check_main_diagonal
+    return main_diagonal_status if main_diagonal_status == Board::WIN
+
+    second_diagonal_status = @board.check_second_diagonal
+    return main_diagonal_status if second_diagonal_status == Board::WIN
+
+    draw_status = @board.draw
+    return draw_status if draw_status = Board::DRAW
     
-    for i in board.table
-      if i.all?{ |inner| inner == 'X' }
-        return WIN
-      elsif i.all? { |inner| inner == 'O' }
-        return WIN
-      end
-    end
-    
-    board_columns = check_columns board
-    for i in board_columns
-      if i.all?{ |inner| inner == 'X' }
-        return WIN
-      elsif i.all? { |inner| inner == 'O' }
-        return WIN
-      end
-    end
-
-    board_diagonal = check_main_diagonal board
-    if board_diagonal.all?{ |inner| inner == ['X'] }
-      return WIN
-    elsif board_diagonal.all? { |inner| inner == ['O'] }
-      return WIN
-    end
-
-    board_diagonal = check_second_diagonal board
-    if board_diagonal.all?{ |inner| inner == ['X'] }
-      return WIN
-    elsif board_diagonal.all? { |inner| inner == ['O'] }
-      return WIN
-    end
-
-    if board.table.flatten.none?{ |inner| inner == nil }
-      return DRAW
-    end
-    
-    ON_GAME
   end
 
-  private
-
-  def check_columns board
-    column_matrix = []
-    for i in 0...board.table.length
-      for j in 0...board.table.length
-        @columns << board.table[j][i]
-      end
-      column_matrix << @columns
-      @columns = []
-    end
-
-    column_matrix
-  end
-
-  def check_main_diagonal board
-    main_diagonal_matrix = []
-    for i in 0...board.table.length
-      for j in 0...board.table.length
-        if j == i
-          @main_diagonal << board.table[j][i]
-        end
-      end
-      main_diagonal_matrix << @main_diagonal
-      @main_diagonal = []
-    end
-
-    main_diagonal_matrix
-  end
-
-  def check_second_diagonal board
-    second_diagonal_matrix = []
-    for i in 0...board.table.length
-      for j in 0...board.table.length
-        if (j == board.table.size - i - 1)
-          @second_diagonal << board.table[i][j]
-        end
-      end
-      second_diagonal_matrix << @second_diagonal
-      @second_diagonal = []
-    end
-
-    second_diagonal_matrix
-  end
 end

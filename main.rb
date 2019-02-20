@@ -5,26 +5,22 @@ require('player')
 
 def main
   loop do
-    game = Game.new
-
     puts welcome_screen
 
     print "Please enter the dimension of the table [default: 3 (3 means 3x3)]: "
     dimension = gets.strip.to_i
-    board = Board.new(dimension)
 
-    player_name, player_sym = setup_player(1, Player::PLAYER1_NAME, Player::PLAYER1_SYMBOL)
-    player1 = Player.new(player_name, player_sym)
+    player_name1, player_sym1 = setup_player(1, Player::PLAYER1_NAME, Player::PLAYER1_SYMBOL)
     
-    player_name, player_sym = setup_player(2, Player::PLAYER2_NAME, Player::PLAYER2_SYMBOL)
-    player2 = Player.new(player_name, player_sym)
+    player_name2, player_sym2 = setup_player(2, Player::PLAYER2_NAME, Player::PLAYER2_SYMBOL)
+
+    game = Game.new(dimension, player_name1, player_sym1, player_name2, player_sym2)
 
     on_game = true
     play_again = true
 
-    print_table(board)
+    print_table(game.board)
 
-  
     while on_game
 
       make_a_move(player1, board)
@@ -62,9 +58,9 @@ end
 def setup_player(num_of_player, name, symbol)
   print "Please insert the name of the player #{num_of_player}: "
   player_name = gets.strip.capitalize
-  player_name = player_name == "" ? name : player_name
   print "Select your symbol[default: #{symbol}]: "
   player_sym = gets.strip.upcase
+  player_name = player_name == "" ? name : player_name
   player_sym = player_sym == "" ? symbol : player_sym
 
   return player_name, player_sym
