@@ -7,7 +7,6 @@ class Board
   ON_GAME = 'on_game'
 
   attr_accessor :size, :table, :column, :main_diagonal, :second_diagonal, :column_matrix
-  attr_reader :board_status
 
   def initialize(size)
     @size = size < 3 ? DIMENSION : size
@@ -16,7 +15,6 @@ class Board
     @columns = []
     @main_diagonal = []
     @second_diagonal = []
-    @board_status = ON_GAME
   end
 
   def graphic_table
@@ -62,22 +60,22 @@ class Board
     table_str
    end
 
-   def check_rows board
-    for i in board.table
+   def check_rows
+    for i in @table
       if i.all?{ |inner| inner == 'X' }
         return WIN
       elsif i.all? { |inner| inner == 'O' }
         return WIN
       end
     end
-
+    ON_GAME
   end
 
-  def check_columns board
+  def check_columns
     column_matrix = []
-    for i in 0...board.table.length
-      for j in 0...board.table.length
-        @columns << board.table[j][i]
+    for i in 0...@table.length
+      for j in 0...@table.length
+        @columns << @table[j][i]
       end
       column_matrix << @columns
       @columns = []
@@ -90,56 +88,56 @@ class Board
         return WIN
       end
     end
-
+    ON_GAME
   end
 
-  def check_main_diagonal board
+  def check_main_diagonal
     main_diagonal_matrix = []
-    for i in 0...board.table.length
-      for j in 0...board.table.length
+    for i in 0...@table.length
+      for j in 0...@table.length
         if j == i
-          @main_diagonal << board.table[j][i]
+          @main_diagonal << @table[j][i]
         end
       end
       main_diagonal_matrix << @main_diagonal
       @main_diagonal = []
     end
 
-    for i in main_diagonal_matrix
-      if i.all?{ |inner| inner == 'X' }
-        return WIN
-      elsif i.all? { |inner| inner == 'O' }
-        return WIN
-      end
+    if main_diagonal_matrix.all?{ |inner| inner == ['X'] }
+      return WIN
+    elsif main_diagonal_matrix.all? { |inner| inner == ['O'] }
+      return WIN
     end
-
+    ON_GAME
   end
 
-  def check_second_diagonal board
+  def check_second_diagonal
     second_diagonal_matrix = []
-    for i in 0...board.table.length
-      for j in 0...board.table.length
-        if (j == board.table.size - i - 1)
-          @second_diagonal << board.table[i][j]
+    for i in 0...@table.length
+      for j in 0...@table.length
+        if (j == @table.size - i - 1)
+          @second_diagonal << @table[i][j]
         end
       end
       second_diagonal_matrix << @second_diagonal
       @second_diagonal = []
     end
 
-    for i in second_diagonal_matrix
-      if i.all?{ |inner| inner == 'X' }
-        return WIN
-      elsif i.all? { |inner| inner == 'O' }
-        return WIN
-      end
+    if second_diagonal_matrix.all?{ |inner| inner == ['X'] }
+      return WIN
+    elsif second_diagonal_matrix.all? { |inner| inner == ['O'] }
+      return WIN
     end
+
+    ON_GAME
   end
 
-  def draw board
-    if board.table.flatten.none?{ |inner| inner == nil }
+  def draw
+    puts "table in draw: #{@table.flatten}"
+    if @table.flatten.none?{ |inner| inner == nil }
       return DRAW
     end
+    ON_GAME
   end
 
   private

@@ -10,11 +10,11 @@ def main
     print "Please enter the dimension of the table [default: 3 (3 means 3x3)]: "
     dimension = gets.strip.to_i
 
-    player_name1, player_sym1 = setup_player(1, Player::PLAYER1_NAME, Player::PLAYER1_SYMBOL)
+    player_name1 = setup_player(1, Player::PLAYER1_NAME)
     
-    player_name2, player_sym2 = setup_player(2, Player::PLAYER2_NAME, Player::PLAYER2_SYMBOL)
+    player_name2 = setup_player(2, Player::PLAYER2_NAME)
 
-    game = Game.new(dimension, player_name1, player_sym1, player_name2, player_sym2)
+    game = Game.new(dimension, player_name1, Player::PLAYER1_SYMBOL, player_name2, Player::PLAYER2_SYMBOL)
 
     on_game = true
     play_again = true
@@ -23,21 +23,20 @@ def main
 
     while on_game
 
-      make_a_move(player1, board)
+      next_move = setup_move(game.player_on_turn, game.board)
+      game.make_a_move(next_move)
 
       system("cls") || system("clear")
 
-      print_table(board)
-      game_status = game.status(board)
-
-      if game_status == Game::WIN
-        puts "#{player1.name} you won!!"
+      print_table(game.board)
+      game_status = game.status
+      puts "game_status: #{game_status}"
+      if game_status == Board::WIN
+        puts "#{game.player_on_turn.name} you won!!"
         on_game = false
-      elsif game_status == Game::DRAW
+      elsif game_status == Board::DRAW
         puts "Sorry none of you won"
         on_game = false
-      else
-        player1, player2 = player2, player1
       end
     end
 
@@ -55,31 +54,29 @@ def welcome_screen
   welcome = "*"*welcome.length + "\n" + welcome + "\n" + "*"*welcome.length
 end
 
-def setup_player(num_of_player, name, symbol)
+def setup_player(num_of_player, name)
   print "Please insert the name of the player #{num_of_player}: "
   player_name = gets.strip.capitalize
-  print "Select your symbol[default: #{symbol}]: "
-  player_sym = gets.strip.upcase
   player_name = player_name == "" ? name : player_name
-  player_sym = player_sym == "" ? symbol : player_sym
 
-  return player_name, player_sym
+  return player_name
 end
 
-def make_a_move(player, board)
+def setup_move(player, board)
   begin
     puts "Enter the value from 1 to #{board.size**2}"
     print "#{player.name} your turn: "
     next_move = gets.match(/\d+/)[0].to_i
     raise "Please enter a number in the range." unless (next_move).between?(1, board.size**2)
-    player.play(next_move)
-    raise "Please select an empty position." unless board.fill_table(player.value, player.symbol)
+    # raise "Please select an empty position." unless board.fill_table(player.value, player.symbol)
   rescue NoMethodError
     puts "Please enter only numeric values"
     retry
   rescue RuntimeError => e
     puts "#{e}"
     retry
+  else
+    return next_move
   end
 end
 
