@@ -10,11 +10,11 @@ def main
     print "Please enter the dimension of the table [default: 3 (3 means 3x3)]: "
     dimension = gets.strip.to_i
 
-    player_name1 = setup_player(1, Player::PLAYER1_NAME)
+    player_name1 = setup_player(1, Player::PLAYER1_DEFAULT_NAME)
     
-    player_name2 = setup_player(2, Player::PLAYER2_NAME)
+    player_name2 = setup_player(2, Player::PLAYER2_DEFAULT_NAME)
 
-    game = Game.new(dimension, player_name1, Player::PLAYER1_SYMBOL, player_name2, Player::PLAYER2_SYMBOL)
+    game = Game.new(dimension, player_name1, Player::PLAYER1_DEFAULT_SYMBOL, player_name2, Player::PLAYER2_DEFAULT_SYMBOL)
 
     on_game = true
     play_again = true
@@ -30,18 +30,20 @@ def main
 
       print_table(game.board)
       game_status = game.status
-      puts "game_status: #{game_status}"
+
       if game_status == Board::WIN
         puts "#{game.player_on_turn.name} you won!!"
         on_game = false
       elsif game_status == Board::DRAW
         puts "Sorry none of you won"
         on_game = false
+      else
+        game.change_player
       end
     end
 
     print 'Do you want to play again? (y/n) [default: n]: '
-    play_again = gets.chomp == 'y' ? true : false
+    play_again = gets.chomp.downcase.match(/y|yes/) ? true : false
     on_game = true if play_again
     system("cls") || system("clear") if play_again
     break unless play_again
@@ -68,7 +70,7 @@ def setup_move(player, board)
     print "#{player.name} your turn: "
     next_move = gets.match(/\d+/)[0].to_i
     raise "Please enter a number in the range." unless (next_move).between?(1, board.size**2)
-    # raise "Please select an empty position." unless board.fill_table(player.value, player.symbol)
+    raise "Please select an empty position." unless board.read_cell(next_move)
   rescue NoMethodError
     puts "Please enter only numeric values"
     retry
