@@ -1,5 +1,4 @@
 $LOAD_PATH << '.'
-require('player')
 require('game')
 
 def main
@@ -10,7 +9,7 @@ def main
     dimension = gets.strip.to_i
 
     player_name1 = setup_player(1, Player::PLAYER1_DEFAULT_NAME)
-    
+
     player_name2 = setup_player(2, Player::PLAYER2_DEFAULT_NAME)
 
     game = Game.new(dimension, player_name1, Player::PLAYER1_DEFAULT_SYMBOL, player_name2, Player::PLAYER2_DEFAULT_SYMBOL)
@@ -30,7 +29,7 @@ def main
 
       print_table(game)
       game_status = game.status
-      
+
       if game_status == Board::WIN
         puts "#{game.player_on_turn.name} you won!!"
         on_game = false
@@ -53,7 +52,7 @@ end
 
 def welcome_screen
   welcome = "WELCOME TO THE TIC TAC TOE GAME!"
-  welcome = "*"*welcome.length + "\n" + welcome + "\n" + "*"*welcome.length
+  welcome = "#{'*' * welcome.length}\n#{welcome}\n#{'*' * welcome.length}"
 end
 
 def setup_player(num_of_player, default_name)
@@ -65,11 +64,10 @@ def setup_player(num_of_player, default_name)
 end
 
 def setup_move(player, board)
-  begin
     puts "Enter the value from 1 to #{board.size**2}"
     print "#{player.name} your turn: "
     next_move = gets.match(/\d+/)[0].to_i
-    raise "Please enter a number in the range." unless (next_move).between?(1, board.size**2)
+    raise "Please enter a number in the range." unless next_move.between?(1, board.size**2)
     raise "Please select an empty position." unless board.empty_position?(next_move)
   rescue NoMethodError
     puts "Please enter only numeric values"
@@ -79,7 +77,7 @@ def setup_move(player, board)
     retry
   else
     return next_move
-  end
+
 end
 
 def print_table(game)

@@ -105,7 +105,6 @@ class Board
   def write_cell(position, symbol)
     arr_pos = position_coverter position
     @table[arr_pos[0]][arr_pos[1]] = symbol
-    p @table
   end
 
 end

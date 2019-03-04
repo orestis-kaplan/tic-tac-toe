@@ -1,5 +1,6 @@
 # game class
-require_relative('board')
+require('board')
+require('player')
 class Game
 
   attr_reader :board, :player_on_turn
@@ -17,7 +18,7 @@ class Game
     columns_status = @board.check_columns
     main_diagonal_status = @board.check_main_diagonal
     second_diagonal_status = @board.check_second_diagonal
-    
+
     win = [rows_status, columns_status, main_diagonal_status, second_diagonal_status].any? do |status|
       status == Board::WIN
     end
@@ -27,7 +28,7 @@ class Game
     else
       draw_status = @board.draw
       return draw_status if draw_status == Board::DRAW
-    end 
+    end
     Board::ON_GAME
   end
 
