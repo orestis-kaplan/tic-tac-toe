@@ -1,4 +1,5 @@
 # game class
+require_relative('board')
 class Game
 
   attr_reader :board, :player_on_turn
@@ -13,31 +14,42 @@ class Game
   def status
 
     rows_status = @board.check_rows
-    return rows_status if rows_status == Board::WIN
-
     columns_status = @board.check_columns
-    return columns_status if columns_status == Board::WIN
-
     main_diagonal_status = @board.check_main_diagonal
-    return main_diagonal_status if main_diagonal_status == Board::WIN
-
     second_diagonal_status = @board.check_second_diagonal
-    return second_diagonal_status if second_diagonal_status == Board::WIN
+    
+    win = [rows_status, columns_status, main_diagonal_status, second_diagonal_status].any? do |status|
+      status == Board::WIN
+    end
 
-    draw_status = @board.draw
-    return draw_status if draw_status == Board::DRAW
-    
-    
+    if(win)
+      return Board::WIN
+    else
+      draw_status = @board.draw
+      return draw_status if draw_status == Board::DRAW
+    end 
+    Board::ON_GAME
   end
 
   def make_a_move move
-    @player1.play(move)
-    @board.fill_table(@player1.value, @player1.symbol)
-    @player1, @player2 = @player2, @player1
+    @player_on_turn.play(move)
   end
 
-  def change_player
+  def fill_table
+    @board.fill_table(@player_on_turn.value, @player_on_turn.symbol)
+  end
+
+  def switch_players
+    @player1, @player2 = @player2, @player1
     @player_on_turn = @player1
+  end
+
+  def paint_table
+    @board.graphic_table
+  end
+
+  def paint_table_guide
+    @board.table_guide
   end
 
 end

@@ -44,11 +44,11 @@ class Board
     table_str
    end
 
-   def check_rows
-    for row in @table
-      return WIN if row.uniq.size <= 1 && row.uniq != [nil]
+  def check_rows
+    won = @table.any? do |row|
+      row.uniq.size <= 1 && row.uniq != [nil]
     end
-    ON_GAME
+    won ? WIN : ON_GAME
   end
 
   def check_columns
@@ -60,62 +60,31 @@ class Board
       end
     end
 
-    for column in column_matrix
-      return WIN if column.uniq.size <= 1 && column.uniq != [nil]
+    won = column_matrix.any? do |column|
+      column.uniq.size <= 1 && column.uniq != [nil]
     end
-    ON_GAME
+    won ? WIN : ON_GAME
   end
 
   def check_main_diagonal
-    main_diagonal = []
 
     main_diagonal = @table.map.with_index do |rows, i|
       rows[i]
     end
 
-    return WIN if main_diagonal.uniq.size <= 1 && main_diagonal.uniq != [nil]
-
-    ON_GAME
+    return status = (main_diagonal.uniq.size <= 1 && main_diagonal.uniq != [nil]) ? WIN : ON_GAME
   end
 
   def check_second_diagonal
-    second_diagonal = []
-
     second_diagonal = @table.map.with_index do |rows, i|
       rows[@size - i - 1]
     end
 
-    return WIN if second_diagonal.uniq.size <= 1 && second_diagonal.uniq != [nil]
-
-    ON_GAME
+    return (second_diagonal.uniq.size <= 1 && second_diagonal.uniq != [nil]) ? WIN : ON_GAME
   end
 
   def draw
-    if @table.flatten.none?{ |inner| inner.nil? }
-      return DRAW
-    end
-    ON_GAME
-  end
-
-  def read_cell(position)
-    if empty_position? position
-      return true
-    else
-      return false
-    end
-  end
-
-  private
-
-  def position_coverter position
-    row = col = 0
-
-    for i in (1...position)
-      if i % @size == 0
-        row += 1
-      end
-    end
-    [row, position - @size * row - 1]
+    return (@table.flatten.none?{ |inner| inner.nil? }) ? DRAW : ON_GAME
   end
 
   def empty_position?(position)
@@ -123,9 +92,20 @@ class Board
     @table[arr_pos[0]][arr_pos[1]].nil?
   end
 
+  private
+
+  def position_coverter position
+    row = 0
+
+    (1...position).each{ |i| row += 1 if i % @size == 0 }
+
+    [row, position - @size * row - 1]
+  end
+
   def write_cell(position, symbol)
     arr_pos = position_coverter position
     @table[arr_pos[0]][arr_pos[1]] = symbol
+    p @table
   end
 
 end

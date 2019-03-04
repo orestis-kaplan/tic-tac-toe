@@ -1,7 +1,6 @@
 $LOAD_PATH << '.'
-require('board')
-require('game')
 require('player')
+require('game')
 
 def main
   loop do
@@ -19,18 +18,19 @@ def main
     on_game = true
     play_again = true
 
-    print_table(game.board)
+    print_table(game)
 
     while on_game
 
       next_move = setup_move(game.player_on_turn, game.board)
       game.make_a_move(next_move)
+      game.fill_table
 
       system("cls") || system("clear")
 
-      print_table(game.board)
+      print_table(game)
       game_status = game.status
-
+      
       if game_status == Board::WIN
         puts "#{game.player_on_turn.name} you won!!"
         on_game = false
@@ -38,7 +38,7 @@ def main
         puts "Sorry none of you won"
         on_game = false
       else
-        game.change_player
+        game.switch_players
       end
     end
 
@@ -56,12 +56,12 @@ def welcome_screen
   welcome = "*"*welcome.length + "\n" + welcome + "\n" + "*"*welcome.length
 end
 
-def setup_player(num_of_player, name)
+def setup_player(num_of_player, default_name)
   print "Please insert the name of the player #{num_of_player}: "
   player_name = gets.strip.capitalize
-  player_name = player_name == "" ? name : player_name
+  player_name = player_name == "" ? default_name : player_name
 
-  return player_name
+  player_name
 end
 
 def setup_move(player, board)
@@ -70,7 +70,7 @@ def setup_move(player, board)
     print "#{player.name} your turn: "
     next_move = gets.match(/\d+/)[0].to_i
     raise "Please enter a number in the range." unless (next_move).between?(1, board.size**2)
-    raise "Please select an empty position." unless board.read_cell(next_move)
+    raise "Please select an empty position." unless board.empty_position?(next_move)
   rescue NoMethodError
     puts "Please enter only numeric values"
     retry
@@ -82,12 +82,13 @@ def setup_move(player, board)
   end
 end
 
-def print_table(board)
+def print_table(game)
+  size = game.board.size
   puts "TABLE GUIDE"
-  puts board.table_guide
-  puts "*" * ((board.size * board.size).to_s.length * board.size + board.size)
+  puts game.paint_table_guide
+  puts "*" * ((size * size).to_s.length * size + size)
   puts "TABLE GAME"
-  puts board.graphic_table
+  puts game.paint_table
 end
 
 main
