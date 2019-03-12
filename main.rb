@@ -74,7 +74,7 @@ def setup_move(player, board)
     puts "Please enter only numeric values"
     retry
   rescue RuntimeError => e
-    puts "#{e}"
+    puts e.to_s
     retry
   else
     return next_move
