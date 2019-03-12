@@ -8,11 +8,11 @@ def main
     print "Please enter the dimension of the table [default: 3 (3 means 3x3)]: "
     dimension = gets.strip.to_i
 
-    player_name1 = setup_player(1, Player::PLAYER1_DEFAULT_NAME)
+    player_name1,player1_symbol = setup_player(1)
 
-    player_name2 = setup_player(2, Player::PLAYER2_DEFAULT_NAME)
+    player_name2,player2_symbol = setup_player(2)
 
-    game = Game.new(dimension, player_name1, Player::PLAYER1_DEFAULT_SYMBOL, player_name2, Player::PLAYER2_DEFAULT_SYMBOL)
+    game = Game.new(dimension, player_name1, player1_symbol, player_name2, player2_symbol)
 
     on_game = true
     play_again = true
@@ -55,12 +55,12 @@ def welcome_screen
   welcome = "#{'*' * welcome.length}\n#{welcome}\n#{'*' * welcome.length}"
 end
 
-def setup_player(num_of_player, default_name)
+def setup_player  num_of_player
   print "Please insert the name of the player #{num_of_player}: "
   player_name = gets.strip.capitalize
-  player_name = player_name == "" ? default_name : player_name
-
-  player_name
+  print "Please insert the symbol of the player #{num_of_player}: "
+  player_symbol = gets.strip.capitalize
+  return player_name,player_symbol
 end
 
 def setup_move(player, board)
