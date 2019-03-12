@@ -87,6 +87,21 @@ class Board
     return (@table.flatten.none?{ |inner| inner.nil? }) ? DRAW : ON_GAME
   end
 
+  def return_status
+
+    win = [check_rows, check_columns, check_main_diagonal, check_second_diagonal].any? do |status|
+      status == WIN
+    end
+
+    if(win)
+      return WIN
+    else
+      draw_status = draw
+      return draw_status if draw_status == DRAW
+    end
+    ON_GAME
+  end
+
   def empty_position?(position)
     arr_pos = position_coverter position
     @table[arr_pos[0]][arr_pos[1]].nil?

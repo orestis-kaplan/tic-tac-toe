@@ -13,23 +13,24 @@ class Game
   end
 
   def status
+    return @board.return_status
+  end
 
-    rows_status = @board.check_rows
-    columns_status = @board.check_columns
-    main_diagonal_status = @board.check_main_diagonal
-    second_diagonal_status = @board.check_second_diagonal
-
-    win = [rows_status, columns_status, main_diagonal_status, second_diagonal_status].any? do |status|
-      status == Board::WIN
-    end
-
-    if(win)
-      return Board::WIN
+  def still_active? status
+    if status == Board::ON_GAME
+      return true
     else
-      draw_status = @board.draw
-      return draw_status if draw_status == Board::DRAW
+      return false
     end
-    Board::ON_GAME
+  end
+
+  def resolve_game? status
+     if status == Board::WIN
+       switch_players
+       return true
+     else
+       return false
+     end
   end
 
   def make_a_move move

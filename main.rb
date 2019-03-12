@@ -21,23 +21,24 @@ def main
 
     while on_game
 
-      next_move = setup_move(game.player_on_turn, game.board)
-      game.make_a_move(next_move)
-      game.fill_table
-
-      system("cls") || system("clear")
-
-      print_table(game)
       game_status = game.status
 
-      if game_status == Board::WIN
-        puts "#{game.player_on_turn.name} you won!!"
-        on_game = false
-      elsif game_status == Board::DRAW
-        puts "Sorry none of you won"
-        on_game = false
-      else
+      if game.still_active?(game_status)
+        next_move = setup_move(game.player_on_turn, game.board)
+        game.make_a_move(next_move)
+        game.fill_table
+
+        system("cls") || system("clear")
         game.switch_players
+
+        print_table(game)
+      else
+        if game.resolve_game?(game_status)
+          puts "#{game.player_on_turn.name} you won!!"
+        else
+          puts "Sorry none of you won"
+        end
+          on_game = false
       end
     end
 

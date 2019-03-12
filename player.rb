@@ -26,6 +26,7 @@ class Player
       if @name.empty?
         @name = PLAYER2_DEFAULT_NAME
         @symbol = PLAYER2_DEFAULT_SYMBOL
+        @@player1_name_active = false
       end
     else
       # first player conditions
@@ -38,6 +39,3 @@ class Player
   end
 
 end
- # players_one_name_active = true
- # player_name = 'player 2'
-# player_name = default_name if player_name.length < 1
