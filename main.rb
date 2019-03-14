@@ -9,11 +9,13 @@ def main
 
     dimension = gets.strip.to_i
 
+    game = Game.new(dimension)
+
     player_name1,player1_symbol = get_player_info(1)
+    game.set_player(0, player_name1, player1_symbol)
 
     player_name2,player2_symbol = get_player_info(2)
-
-    game = Game.new(dimension, player_name1, player1_symbol, player_name2, player2_symbol)
+    game.set_player(1, player_name2, player2_symbol)
 
     print_table(game)
     

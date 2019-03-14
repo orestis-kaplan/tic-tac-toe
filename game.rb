@@ -5,11 +5,12 @@ class Game
 
   attr_reader :board, :player_on_turn, :player1, :player2
 
-  def initialize(board_dimension, player1_name, player1_sym, player2_name, player2_sym)
+  def initialize(board_dimension)
     @board = Board.new(board_dimension)
-    @player1 = Player.new(player1_name, player1_sym)
-    @player2 = Player.new(player2_name, player2_sym)
+    @player1 = Player.new
+    @player2 = Player.new
     @player_on_turn = @player1
+    @players = [@player1, @player2]
   end
 
   def status
@@ -48,6 +49,13 @@ class Game
 
   def paint_table_guide
     @board.table_guide
+  end
+
+  def set_player(index, name, symbol)
+    @players[index].name = name
+    @players[index].symbol = symbol
+
+    @players[index].checks_players
   end
 
 end

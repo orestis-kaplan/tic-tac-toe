@@ -9,11 +9,10 @@ class Player
 
   @@player1_name_active = false
 
-  def initialize(name, symbol)
+  def initialize(name = nil, symbol = nil)
     @symbol = symbol
     @name = name
     @value = nil
-    checks_players
   end
 
   def play(value)
