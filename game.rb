@@ -3,7 +3,7 @@ require('board')
 require('player')
 class Game
 
-  attr_reader :board, :player_on_turn
+  attr_reader :board, :player_on_turn, :player1, :player2
 
   def initialize(board_dimension, player1_name, player1_sym, player2_name, player2_sym)
     @board = Board.new(board_dimension)
@@ -17,11 +17,7 @@ class Game
   end
 
   def still_active? status
-    if status == Board::ON_GAME
-      return true
-    else
-      return false
-    end
+     status == Board::ON_GAME
   end
 
   def resolve_game? status
