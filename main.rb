@@ -3,7 +3,7 @@ require('game')
 
 def main
   loop do
-    puts welcome_screen
+    welcome_screen
 
     print "Please enter the dimension of the table [default: 3 (3 means 3x3)]: "
 
@@ -57,6 +57,7 @@ end
 def welcome_screen
   welcome = "WELCOME TO THE TIC TAC TOE GAME!"
   welcome = "#{'*' * welcome.length}\n#{welcome}\n#{'*' * welcome.length}"
+  puts welcome
 end
 
 def get_player_info  num_of_player
