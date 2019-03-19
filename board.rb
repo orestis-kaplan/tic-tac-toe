@@ -89,8 +89,8 @@ class Board
 
   def return_status
     win = [check_rows, check_columns, check_main_diagonal, check_second_diagonal].any? do |status|
-    status == WIN
-  end
+      status == WIN
+    end
 
     if(win)
       return WIN

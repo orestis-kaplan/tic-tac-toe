@@ -18,12 +18,10 @@ def main
     game.set_player(1, player_name2, player2_symbol)
 
     print_table(game)
-    
-    while game.still_active?(game.status)
+
+    while game.still_active?
 
         save_new_move(game)
-
-        system("cls") || system("clear")
 
         print_table(game)
 
@@ -47,7 +45,7 @@ def save_new_move game
 end
 
 def announce_winner game
-  if game.resolve_game?(game.status)
+  if game.resolve_game?
     puts "#{game.player_on_turn.name} you won!!"
   else
     puts "Sorry none of you won"
@@ -86,6 +84,7 @@ def setup_move(player, board)
 end
 
 def print_table(game)
+  system("cls") || system("clear")  
   size = game.board.size
   puts "TABLE GUIDE"
   puts game.paint_table_guide
