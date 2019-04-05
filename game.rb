@@ -20,11 +20,11 @@ class Game
     return @board.return_status
   end
 
-  def still_active? status
-     status == Board::ON_GAME
+  def still_active?
+    self.status == Board::ON_GAME
   end
 
-  def resolve_game? status
+  def resolve_game?
      if status == Board::WIN
        switch_players
        return true
