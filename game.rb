@@ -1,14 +1,17 @@
 # game class
-require('board')
-require('player')
+require_relative('board')
+require_relative('player')
+
 class Game
 
   attr_reader :board, :player_on_turn, :player1, :player2
 
   def initialize(board_dimension)
     @board = Board.new(board_dimension)
-    @player1 = Player.new
-    @player2 = Player.new
+    @player1 = Player.new(Player::PLAYER1_DEFAULT_NAME,
+                          Player::PLAYER1_DEFAULT_SYMBOL)
+    @player2 = Player.new(Player::PLAYER2_DEFAULT_NAME,
+                          Player::PLAYER2_DEFAULT_SYMBOL)
     @player_on_turn = @player1
     @players = [@player1, @player2]
   end
@@ -52,10 +55,8 @@ class Game
   end
 
   def set_player(index, name, symbol)
-    @players[index].name = name
-    @players[index].symbol = symbol
-
-    @players[index].checks_players
+    @players[index].name = name if !name.empty?
+    @players[index].symbol = symbol if !symbol.empty?
   end
 
 end

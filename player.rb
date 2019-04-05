@@ -7,8 +7,6 @@ class Player
   PLAYER2_DEFAULT_SYMBOL = 'O'
   PLAYER2_DEFAULT_NAME = 'Player 2'
 
-  @@player1_name_active = false
-
   def initialize(name = nil, symbol = nil)
     @symbol = symbol
     @name = name
@@ -18,23 +16,4 @@ class Player
   def play(value)
     @value = value
   end
-
-  def checks_players
-    if @@player1_name_active
-      # second player conditions
-      if @name.empty?
-        @name = PLAYER2_DEFAULT_NAME
-        @symbol = PLAYER2_DEFAULT_SYMBOL
-        @@player1_name_active = false
-      end
-    else
-      # first player conditions
-      if @name.empty?
-        @name = PLAYER1_DEFAULT_NAME
-        @symbol = PLAYER1_DEFAULT_SYMBOL
-        @@player1_name_active = true
-      end
-    end
-  end
-
 end

@@ -1,5 +1,4 @@
-$LOAD_PATH << '.'
-require('game')
+require_relative('game')
 
 def main
   loop do
@@ -11,11 +10,8 @@ def main
 
     game = Game.new(dimension)
 
-    player_name1,player1_symbol = get_player_info(1)
-    game.set_player(0, player_name1, player1_symbol)
-
-    player_name2,player2_symbol = get_player_info(2)
-    game.set_player(1, player_name2, player2_symbol)
+    set_player_info(0, game)
+    set_player_info(1, game)
 
     print_table(game)
     
@@ -40,13 +36,13 @@ def main
   puts "Thanks for playing this game!"
 end
 
-def save_new_move game
+def save_new_move(game)
   next_move = setup_move(game.player_on_turn, game.board)
   game.make_a_move(next_move)
   game.fill_table
 end
 
-def announce_winner game
+def announce_winner(game)
   if game.resolve_game?(game.status)
     puts "#{game.player_on_turn.name} you won!!"
   else
@@ -60,12 +56,12 @@ def welcome_screen
   puts welcome
 end
 
-def get_player_info  num_of_player
-  print "Please insert the name of the player #{num_of_player}: "
+def set_player_info(player_num, game)
+  print "Please insert the name of the player #{player_num.next}: "
   player_name = gets.strip.capitalize
-  print "Please insert the symbol of the player #{num_of_player}: "
+  print "Please insert the symbol of the player #{player_num.next}: "
   player_symbol = gets.strip.capitalize
-  return player_name,player_symbol
+  game.set_player(player_num, player_name, player_symbol)
 end
 
 def setup_move(player, board)
